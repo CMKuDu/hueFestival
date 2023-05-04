@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33530.505
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "festivalHue", "festivalHue\festivalHue.csproj", "{D15C24F2-5ED5-4BBE-AFF2-493F7733E182}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D15C24F2-5ED5-4BBE-AFF2-493F7733E182}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D15C24F2-5ED5-4BBE-AFF2-493F7733E182}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D15C24F2-5ED5-4BBE-AFF2-493F7733E182}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D15C24F2-5ED5-4BBE-AFF2-493F7733E182}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {68CCE824-5890-4B34-8290-7D61EE7A3126}
+	EndGlobalSection
+EndGlobal
