@@ -11,7 +11,7 @@ public partial class Tickettype
 
     public string? Descriptionticket { get; set; }
 
-    public string? Puslish { get; set; }
+    public bool? Puslish { get; set; }
 
     public string? Aliasticket { get; set; }
 

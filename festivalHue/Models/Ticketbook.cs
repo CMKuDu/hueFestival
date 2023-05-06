@@ -13,13 +13,17 @@ public partial class Ticketbook
 
     public string? Note { get; set; }
 
-    public decimal? Money { get; set; }
+    public int? Money { get; set; }
 
     public int Idtransacstatus { get; set; }
 
     public string? Description { get; set; }
 
-    public virtual Transacstatus IdtransacstatusNavigation { get; set; } = null!;
+    public int? Idcustomer { get; set; }
 
-    public virtual ICollection<Customer> Ids { get; set; } = new List<Customer>();
+    public virtual Deatailbookticket IdbookNavigation { get; set; } = null!;
+
+    public virtual Customer? IdcustomerNavigation { get; set; }
+
+    public virtual Transacstatus IdtransacstatusNavigation { get; set; } = null!;
 }

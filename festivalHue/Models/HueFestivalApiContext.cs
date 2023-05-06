@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace festivalHue.Models;
 
-public partial class HueContext : DbContext
+public partial class HueFestivalApiContext : DbContext
 {
-    public HueContext()
+    public HueFestivalApiContext()
     {
     }
 
-    public HueContext(DbContextOptions<HueContext> options)
+    public HueFestivalApiContext(DbContextOptions<HueFestivalApiContext> options)
         : base(options)
     {
     }
@@ -18,6 +18,8 @@ public partial class HueContext : DbContext
     public virtual DbSet<Account> Accounts { get; set; }
 
     public virtual DbSet<Customer> Customers { get; set; }
+
+    public virtual DbSet<Deatailbookticket> Deatailbooktickets { get; set; }
 
     public virtual DbSet<Event> Events { get; set; }
 
@@ -37,30 +39,25 @@ public partial class HueContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=DESKTOP-CLB8QVO;Database=Hue;Trusted_Connection=true;TrustServerCertificate=True;");
+        => optionsBuilder.UseSqlServer("Server=DESKTOP-CLB8QVO;Database=hueFestivalApi;Trusted_Connection=true;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Account>(entity =>
         {
-            entity.HasKey(e => new { e.Idaccount, e.Idrole });
+            entity.HasKey(e => e.Idaccount).HasName("PK__ACCOUNT__F3DEE7EFCBFD0CC9");
 
             entity.ToTable("ACCOUNT");
 
             entity.Property(e => e.Idaccount).HasColumnName("IDACCOUNT");
-            entity.Property(e => e.Idrole).HasColumnName("IDROLE");
-            entity.Property(e => e.Active)
-                .HasMaxLength(1)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("ACTIVE");
+            entity.Property(e => e.Active).HasColumnName("ACTIVE");
             entity.Property(e => e.Datecreate)
                 .HasColumnType("datetime")
                 .HasColumnName("DATECREATE");
             entity.Property(e => e.Email)
-                .HasMaxLength(15)
-                .IsFixedLength()
+                .HasMaxLength(50)
                 .HasColumnName("EMAIL");
+            entity.Property(e => e.Idrole).HasColumnName("IDROLE");
             entity.Property(e => e.Lastlogin)
                 .HasColumnType("datetime")
                 .HasColumnName("LASTLOGIN");
@@ -70,156 +67,144 @@ public partial class HueContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("NAMEACCOUNT");
             entity.Property(e => e.Password)
-                .HasMaxLength(20)
-                .IsFixedLength()
+                .HasMaxLength(50)
                 .HasColumnName("PASSWORD");
-            entity.Property(e => e.Phone)
-                .HasMaxLength(10)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("PHONE");
+            entity.Property(e => e.Phone).HasColumnName("PHONE");
             entity.Property(e => e.Salt)
                 .HasMaxLength(50)
-                .IsFixedLength()
                 .HasColumnName("SALT");
 
             entity.HasOne(d => d.IdroleNavigation).WithMany(p => p.Accounts)
                 .HasForeignKey(d => d.Idrole)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("RELATIONSHIP3");
+                .HasConstraintName("FK_ACCOUNT_ROLE");
         });
 
         modelBuilder.Entity<Customer>(entity =>
         {
-            entity.HasKey(e => new { e.Idcustomer, e.Idlocation });
+            entity.HasKey(e => e.Idcustomer).HasName("PK__CUSTOMER__1AD2CC47BEDBA549");
 
             entity.ToTable("CUSTOMER");
 
             entity.Property(e => e.Idcustomer).HasColumnName("IDCUSTOMER");
-            entity.Property(e => e.Idlocation).HasColumnName("IDLOCATION");
             entity.Property(e => e.Addresscustomer)
-                .HasMaxLength(150)
-                .IsFixedLength()
+                .HasMaxLength(100)
                 .HasColumnName("ADDRESSCUSTOMER");
             entity.Property(e => e.Avatar)
-                .HasColumnType("image")
+                .HasMaxLength(250)
                 .HasColumnName("AVATAR");
             entity.Property(e => e.Birthdaycustomer)
                 .HasColumnType("datetime")
                 .HasColumnName("BIRTHDAYCUSTOMER");
             entity.Property(e => e.Emailcustomer)
                 .HasMaxLength(50)
-                .IsFixedLength()
                 .HasColumnName("EMAILCUSTOMER");
+            entity.Property(e => e.Idlocation).HasColumnName("IDLOCATION");
             entity.Property(e => e.Namecustomer)
                 .HasMaxLength(50)
-                .IsFixedLength()
                 .HasColumnName("NAMECUSTOMER");
             entity.Property(e => e.Phonecustomer)
-                .HasMaxLength(11)
-                .IsFixedLength()
+                .HasMaxLength(12)
                 .HasColumnName("PHONECUSTOMER");
 
             entity.HasOne(d => d.IdlocationNavigation).WithMany(p => p.Customers)
                 .HasForeignKey(d => d.Idlocation)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("RELATIONSHIP25");
+                .HasConstraintName("FK_CUSTOMER_LOCATION");
+        });
+
+        modelBuilder.Entity<Deatailbookticket>(entity =>
+        {
+            entity.HasKey(e => e.Idcustomer);
+
+            entity.ToTable("DEATAILBOOKTICKET");
+
+            entity.Property(e => e.Idcustomer)
+                .ValueGeneratedNever()
+                .HasColumnName("IDCUSTOMER");
+            entity.Property(e => e.Idbook).HasColumnName("IDBOOK");
+            entity.Property(e => e.Idstatus).HasColumnName("IDSTATUS");
+
+            entity.HasOne(d => d.IdcustomerNavigation).WithOne(p => p.Deatailbookticket)
+                .HasForeignKey<Deatailbookticket>(d => d.Idcustomer)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_DEATAILBOOKTICKET_CUSTOMER");
         });
 
         modelBuilder.Entity<Event>(entity =>
         {
-            entity.HasKey(e => new { e.Idevent, e.Idaccount, e.Idrole });
+            entity.HasKey(e => e.Idevent).HasName("PK__EVENT__2868B545F2374CBA");
 
             entity.ToTable("EVENT");
 
             entity.Property(e => e.Idevent).HasColumnName("IDEVENT");
-            entity.Property(e => e.Idaccount).HasColumnName("IDACCOUNT");
-            entity.Property(e => e.Idrole).HasColumnName("IDROLE");
             entity.Property(e => e.Alias)
-                .HasMaxLength(20)
-                .IsFixedLength()
+                .HasMaxLength(50)
                 .HasColumnName("ALIAS");
             entity.Property(e => e.Datecreate)
                 .HasColumnType("datetime")
                 .HasColumnName("DATECREATE");
             entity.Property(e => e.Nameevent)
-                .HasMaxLength(50)
-                .IsFixedLength()
+                .HasMaxLength(100)
                 .HasColumnName("NAMEEVENT");
-            entity.Property(e => e.Puslish)
-                .HasMaxLength(1)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("PUSLISH");
+            entity.Property(e => e.Puslish).HasColumnName("PUSLISH");
             entity.Property(e => e.Thumb)
-                .HasColumnType("image")
+                .HasMaxLength(200)
                 .HasColumnName("THUMB");
-
-            entity.HasOne(d => d.Id).WithMany(p => p.Events)
-                .HasForeignKey(d => new { d.Idaccount, d.Idrole })
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("RELATIONSHIP5");
         });
 
         modelBuilder.Entity<Location>(entity =>
         {
-            entity.HasKey(e => e.Idlocation);
+            entity.HasKey(e => e.Idlocation).HasName("PK__LOCATION__09CF6979980EDE6B");
 
             entity.ToTable("LOCATION");
 
-            entity.Property(e => e.Idlocation)
-                .ValueGeneratedNever()
-                .HasColumnName("IDLOCATION");
-            entity.Property(e => e.Description)
+            entity.Property(e => e.Idlocation).HasColumnName("IDLOCATION");
+            entity.Property(e => e.Address)
                 .HasMaxLength(100)
-                .IsFixedLength()
+                .HasColumnName("ADDRESS");
+            entity.Property(e => e.Description)
+                .HasMaxLength(150)
                 .HasColumnName("DESCRIPTION");
+            entity.Property(e => e.District)
+                .HasMaxLength(100)
+                .HasColumnName("DISTRICT");
             entity.Property(e => e.Namelocation)
                 .HasMaxLength(50)
-                .IsFixedLength()
                 .HasColumnName("NAMELOCATION");
         });
 
         modelBuilder.Entity<News>(entity =>
         {
-            entity.HasKey(e => new { e.Idnews, e.Idaccount, e.Idrole });
+            entity.HasKey(e => e.Idnews).HasName("PK__NEWS__3FFED9CA1D1FA3E7");
 
             entity.ToTable("NEWS");
 
             entity.Property(e => e.Idnews).HasColumnName("IDNEWS");
-            entity.Property(e => e.Idaccount).HasColumnName("IDACCOUNT");
-            entity.Property(e => e.Idrole).HasColumnName("IDROLE");
             entity.Property(e => e.Alias)
                 .HasMaxLength(50)
-                .IsFixedLength()
                 .HasColumnName("ALIAS");
             entity.Property(e => e.Author)
                 .HasMaxLength(50)
-                .IsFixedLength()
                 .HasColumnName("AUTHOR");
+            entity.Property(e => e.Content).HasColumnName("CONTENT");
             entity.Property(e => e.Datecreate)
                 .HasColumnType("datetime")
                 .HasColumnName("DATECREATE");
+            entity.Property(e => e.Description)
+                .HasMaxLength(250)
+                .HasColumnName("DESCRIPTION");
             entity.Property(e => e.Title)
-                .HasMaxLength(50)
-                .IsFixedLength()
+                .HasMaxLength(150)
                 .HasColumnName("TITLE");
-
-            entity.HasOne(d => d.Id).WithMany(p => p.News)
-                .HasForeignKey(d => new { d.Idaccount, d.Idrole })
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("RELATIONSHIP4");
         });
 
         modelBuilder.Entity<Role>(entity =>
         {
-            entity.HasKey(e => e.Idrole);
+            entity.HasKey(e => e.Idrole).HasName("PK__ROLE__8A7E91124D46C7A7");
 
             entity.ToTable("ROLE");
 
-            entity.Property(e => e.Idrole)
-                .ValueGeneratedNever()
-                .HasColumnName("IDROLE");
+            entity.Property(e => e.Idrole).HasColumnName("IDROLE");
             entity.Property(e => e.Description)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -234,64 +219,43 @@ public partial class HueContext : DbContext
 
         modelBuilder.Entity<Ticket>(entity =>
         {
-            entity.HasKey(e => e.Idticket);
+            entity.HasKey(e => e.Idticket).HasName("PK__TICKET__D4E664EDCEB8F3D2");
 
             entity.ToTable("TICKET");
 
-            entity.Property(e => e.Idticket)
-                .ValueGeneratedNever()
-                .HasColumnName("IDTICKET");
-            entity.Property(e => e.Active)
-                .HasMaxLength(1)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("ACTIVE");
-            entity.Property(e => e.Bestseller)
-                .HasMaxLength(1)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("BESTSELLER");
+            entity.Property(e => e.Idticket).HasColumnName("IDTICKET");
+            entity.Property(e => e.Active).HasColumnName("ACTIVE");
+            entity.Property(e => e.Bestseller).HasColumnName("BESTSELLER");
             entity.Property(e => e.Datecreate)
                 .HasColumnType("datetime")
                 .HasColumnName("DATECREATE");
             entity.Property(e => e.Description)
-                .HasMaxLength(100)
-                .IsFixedLength()
+                .HasMaxLength(50)
                 .HasColumnName("DESCRIPTION");
-            entity.Property(e => e.Discount)
-                .HasMaxLength(11)
-                .IsFixedLength()
-                .HasColumnName("DISCOUNT");
             entity.Property(e => e.Idtypeticket).HasColumnName("IDTYPETICKET");
             entity.Property(e => e.Nameticket)
                 .HasMaxLength(100)
-                .IsFixedLength()
                 .HasColumnName("NAMETICKET");
-            entity.Property(e => e.Priceticket)
-                .HasColumnType("money")
-                .HasColumnName("PRICETICKET");
+            entity.Property(e => e.Priceticket).HasColumnName("PRICETICKET");
             entity.Property(e => e.Timeeffective)
                 .HasColumnType("datetime")
                 .HasColumnName("TIMEEFFECTIVE");
-            entity.Property(e => e.Untistock)
-                .HasMaxLength(1)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("UNTISTOCK");
+            entity.Property(e => e.Untistock).HasColumnName("UNTISTOCK");
 
             entity.HasOne(d => d.IdtypeticketNavigation).WithMany(p => p.Tickets)
                 .HasForeignKey(d => d.Idtypeticket)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("RELATIONSHIP11");
+                .HasConstraintName("FK_TICKET_TICKETTYPE");
         });
 
         modelBuilder.Entity<Ticketbook>(entity =>
         {
-            entity.HasKey(e => new { e.Idbook, e.Idtransacstatus });
+            entity.HasKey(e => new { e.Idbook, e.Idtransacstatus }).HasName("PK__TICKETBO__9F311EDD98DFA12E");
 
             entity.ToTable("TICKETBOOK");
 
-            entity.Property(e => e.Idbook).HasColumnName("IDBOOK");
+            entity.Property(e => e.Idbook)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("IDBOOK");
             entity.Property(e => e.Idtransacstatus).HasColumnName("IDTRANSACSTATUS");
             entity.Property(e => e.Datecreatebook)
                 .HasColumnType("datetime")
@@ -300,89 +264,60 @@ public partial class HueContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("DATEPAY");
             entity.Property(e => e.Description)
-                .HasMaxLength(1)
-                .IsUnicode(false)
-                .IsFixedLength()
+                .HasMaxLength(150)
                 .HasColumnName("DESCRIPTION");
-            entity.Property(e => e.Money)
-                .HasColumnType("money")
-                .HasColumnName("MONEY");
+            entity.Property(e => e.Idcustomer).HasColumnName("IDCUSTOMER");
+            entity.Property(e => e.Money).HasColumnName("MONEY");
             entity.Property(e => e.Note)
-                .HasMaxLength(100)
-                .IsFixedLength()
+                .HasMaxLength(50)
                 .HasColumnName("NOTE");
+
+            entity.HasOne(d => d.IdbookNavigation).WithMany(p => p.Ticketbooks)
+                .HasForeignKey(d => d.Idbook)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TICKETBOOK_DEATAILBOOKTICKET1");
+
+            entity.HasOne(d => d.IdcustomerNavigation).WithMany(p => p.Ticketbooks)
+                .HasForeignKey(d => d.Idcustomer)
+                .HasConstraintName("FK_TICKETBOOK_CUSTOMER");
 
             entity.HasOne(d => d.IdtransacstatusNavigation).WithMany(p => p.Ticketbooks)
                 .HasForeignKey(d => d.Idtransacstatus)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("RELATIONSHIP22");
-
-            entity.HasMany(d => d.Ids).WithMany(p => p.Ids)
-                .UsingEntity<Dictionary<string, object>>(
-                    "Deatailbookticket",
-                    r => r.HasOne<Customer>().WithMany()
-                        .HasForeignKey("Idcustomer", "Idlocation")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("RELATIONSHIP24"),
-                    l => l.HasOne<Ticketbook>().WithMany()
-                        .HasForeignKey("Idbook", "Idstatus")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("RELATIONSHIP23"),
-                    j =>
-                    {
-                        j.HasKey("Idbook", "Idstatus", "Idcustomer", "Idlocation");
-                        j.ToTable("DEATAILBOOKTICKET");
-                        j.IndexerProperty<int>("Idbook").HasColumnName("IDBOOK");
-                        j.IndexerProperty<int>("Idstatus").HasColumnName("IDSTATUS");
-                        j.IndexerProperty<int>("Idcustomer").HasColumnName("IDCUSTOMER");
-                        j.IndexerProperty<int>("Idlocation").HasColumnName("IDLOCATION");
-                    });
+                .HasConstraintName("FK_TICKETBOOK_TRANSACSTATUS");
         });
 
         modelBuilder.Entity<Tickettype>(entity =>
         {
-            entity.HasKey(e => e.Idtypeticket);
+            entity.HasKey(e => e.Idtypeticket).HasName("PK__TICKETTY__08775F588224DAF6");
 
             entity.ToTable("TICKETTYPE");
 
-            entity.Property(e => e.Idtypeticket)
-                .ValueGeneratedNever()
-                .HasColumnName("IDTYPETICKET");
+            entity.Property(e => e.Idtypeticket).HasColumnName("IDTYPETICKET");
             entity.Property(e => e.Aliasticket)
                 .HasMaxLength(50)
-                .IsFixedLength()
                 .HasColumnName("ALIASTICKET");
             entity.Property(e => e.Descriptionticket)
-                .HasMaxLength(100)
-                .IsFixedLength()
+                .HasMaxLength(50)
                 .HasColumnName("DESCRIPTIONTICKET");
             entity.Property(e => e.Nametypeticket)
-                .HasMaxLength(50)
-                .IsFixedLength()
+                .HasMaxLength(100)
                 .HasColumnName("NAMETYPETICKET");
-            entity.Property(e => e.Puslish)
-                .HasMaxLength(1)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("PUSLISH");
+            entity.Property(e => e.Puslish).HasColumnName("PUSLISH");
         });
 
         modelBuilder.Entity<Transacstatus>(entity =>
         {
-            entity.HasKey(e => e.Idtransacstatus);
+            entity.HasKey(e => e.Idtransacstatus).HasName("PK__TRANSACS__A0E7F78D02026077");
 
             entity.ToTable("TRANSACSTATUS");
 
-            entity.Property(e => e.Idtransacstatus)
-                .ValueGeneratedNever()
-                .HasColumnName("IDTRANSACSTATUS");
+            entity.Property(e => e.Idtransacstatus).HasColumnName("IDTRANSACSTATUS");
             entity.Property(e => e.Description)
-                .HasMaxLength(150)
-                .IsFixedLength()
+                .HasMaxLength(20)
                 .HasColumnName("DESCRIPTION");
             entity.Property(e => e.Status)
                 .HasMaxLength(20)
-                .IsFixedLength()
                 .HasColumnName("STATUS");
         });
 

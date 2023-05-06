@@ -15,9 +15,7 @@ public partial class News
 
     public DateTime? Datecreate { get; set; }
 
-    public int Idaccount { get; set; }
+    public string? Description { get; set; }
 
-    public int Idrole { get; set; }
-
-    public virtual Account Id { get; set; } = null!;
+    public string? Content { get; set; }
 }

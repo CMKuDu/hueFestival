@@ -11,15 +11,9 @@ public partial class Event
 
     public string? Alias { get; set; }
 
-    public string? Puslish { get; set; }
+    public bool? Puslish { get; set; }
 
-    public byte[]? Thumb { get; set; }
+    public string? Thumb { get; set; }
 
     public DateTime? Datecreate { get; set; }
-
-    public int Idaccount { get; set; }
-
-    public int Idrole { get; set; }
-
-    public virtual Account Id { get; set; } = null!;
 }

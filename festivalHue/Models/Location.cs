@@ -11,5 +11,9 @@ public partial class Location
 
     public string? Description { get; set; }
 
+    public string? Address { get; set; }
+
+    public string? District { get; set; }
+
     public virtual ICollection<Customer> Customers { get; set; } = new List<Customer>();
 }

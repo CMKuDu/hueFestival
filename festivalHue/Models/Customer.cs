@@ -11,7 +11,7 @@ public partial class Customer
 
     public DateTime? Birthdaycustomer { get; set; }
 
-    public byte[]? Avatar { get; set; }
+    public string? Avatar { get; set; }
 
     public string? Addresscustomer { get; set; }
 
@@ -21,7 +21,9 @@ public partial class Customer
 
     public int Idlocation { get; set; }
 
+    public virtual Deatailbookticket? Deatailbookticket { get; set; }
+
     public virtual Location IdlocationNavigation { get; set; } = null!;
 
-    public virtual ICollection<Ticketbook> Ids { get; set; } = new List<Ticketbook>();
+    public virtual ICollection<Ticketbook> Ticketbooks { get; set; } = new List<Ticketbook>();
 }

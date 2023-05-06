@@ -9,7 +9,7 @@ public partial class Account
 
     public string? Nameaccount { get; set; }
 
-    public string? Phone { get; set; }
+    public int? Phone { get; set; }
 
     public string? Email { get; set; }
 
@@ -17,7 +17,7 @@ public partial class Account
 
     public string? Salt { get; set; }
 
-    public string? Active { get; set; }
+    public bool? Active { get; set; }
 
     public DateTime? Datecreate { get; set; }
 
@@ -25,9 +25,5 @@ public partial class Account
 
     public int Idrole { get; set; }
 
-    public virtual ICollection<Event> Events { get; set; } = new List<Event>();
-
     public virtual Role IdroleNavigation { get; set; } = null!;
-
-    public virtual ICollection<News> News { get; set; } = new List<News>();
 }

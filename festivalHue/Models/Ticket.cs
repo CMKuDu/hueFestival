@@ -11,21 +11,21 @@ public partial class Ticket
 
     public string? Description { get; set; }
 
-    public decimal? Priceticket { get; set; }
-
-    public string? Discount { get; set; }
+    public int? Priceticket { get; set; }
 
     public DateTime? Datecreate { get; set; }
 
     public DateTime? Timeeffective { get; set; }
 
-    public string? Bestseller { get; set; }
+    public bool? Bestseller { get; set; }
 
-    public string? Active { get; set; }
+    public bool? Active { get; set; }
 
-    public string? Untistock { get; set; }
+    public bool? Untistock { get; set; }
 
     public int Idtypeticket { get; set; }
+
+    public int? Disscount { get; set; }
 
     public virtual Tickettype IdtypeticketNavigation { get; set; } = null!;
 }
