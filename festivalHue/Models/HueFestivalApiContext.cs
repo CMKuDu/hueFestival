@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using ChatGPT.Net.DTO.ChatGPTUnofficial;
 using Microsoft.EntityFrameworkCore;
 
 namespace festivalHue.Models;
 
 public partial class HueFestivalApiContext : DbContext
 {
-    public HueFestivalApiContext()
+    private readonly HueFestivalApiContext _context;
+    public HueFestivalApiContext(HueFestivalApiContext context)
     {
+        _context = context;
     }
 
     public HueFestivalApiContext(DbContextOptions<HueFestivalApiContext> options)
@@ -25,7 +28,7 @@ public partial class HueFestivalApiContext : DbContext
 
     public virtual DbSet<Location> Locations { get; set; }
 
-    public virtual DbSet<News> News { get; set; }
+    public virtual DbSet<News> News { get; set; } 
 
     public virtual DbSet<Role> Roles { get; set; }
 
@@ -38,8 +41,8 @@ public partial class HueFestivalApiContext : DbContext
     public virtual DbSet<Transacstatus> Transacstatuses { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=DESKTOP-CLB8QVO;Database=hueFestivalApi;Trusted_Connection=true;TrustServerCertificate=True;");
+
+        => optionsBuilder.UseSqlServer("server=DESKTOP-CLB8QVO;database=hueFestivalApi;Trusted_Connection=True;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
